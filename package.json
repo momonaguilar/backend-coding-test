@@ -7,8 +7,9 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha tests",
-    "start": "node index.js"
+    "test": "mocha tests && eslint ./",
+    "start": "node index.js",
+    "lint": "eslint ./"
   },
   "keywords": [
     "Xendit"
@@ -21,6 +22,7 @@
     "sqlite3": "^4.0.6"
   },
   "devDependencies": {
+    "eslint": "^6.0.0",
     "mocha": "^6.1.4",
     "supertest": "^4.0.2"
   }
