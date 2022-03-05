@@ -7,7 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha tests && eslint ./",
+    "test": "mocha tests",
+    "coverage": "nyc npm run test",
     "start": "node index.js",
     "lint": "eslint ./"
   },
@@ -24,6 +25,7 @@
   "devDependencies": {
     "eslint": "^6.0.0",
     "mocha": "^6.1.4",
+    "nyc": "^15.1.0",
     "supertest": "^4.0.2"
   }
 }
