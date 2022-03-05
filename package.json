@@ -12,6 +12,10 @@
     "start": "node index.js",
     "lint": "eslint ./"
   },
+  "pre-push": {
+    "run": ["coverage"],
+    "silent": true
+  },
   "keywords": [
     "Xendit"
   ],
@@ -26,6 +30,7 @@
     "eslint": "^6.0.0",
     "mocha": "^6.1.4",
     "nyc": "^15.1.0",
+    "pre-push": "^0.1.1",
     "supertest": "^4.0.2"
   }
 }
