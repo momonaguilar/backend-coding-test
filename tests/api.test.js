@@ -1,6 +1,8 @@
 'use strict';
 
 const request = require('supertest');
+const chai = require('chai');
+const expect = chai.expect;
 
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database(':memory:');
@@ -34,7 +36,7 @@ describe('API tests', () => {
         it('should fail to get all rides, couldn\'t find any rides', async()=>{
             await request(app)
                 .get('/rides')
-                .expect(200, {
+                .expect(404, {
                     error_code: 'RIDES_NOT_FOUND_ERROR',
                     message: 'Could not find any rides'
                 });
@@ -43,18 +45,29 @@ describe('API tests', () => {
 
     describe('POST /rides', async() => {
         it('should add rides successfully', async() => {
+            const data = {
+                start_lat:'10',
+                end_lat:'10',
+                start_long:'20',
+                end_long:'25',
+                rider_name:'Jose',
+                driver_name:'Xendit',
+                driver_vehicle:'XYZ123'
+            };
             await request(app)
                 .post('/rides')
-                .send({
-                    start_lat:'10',
-                    end_lat:'10',
-                    start_long:'20',
-                    end_long:'25',
-                    rider_name:'Jose',
-                    driver_name:'Xendit',
-                    driver_vehicle:'XYZ123'
-                })
-                .expect(200);
+                .send(data)
+                .expect(200)
+                .then(async (response) => {
+                    // Check the response
+                    expect(response.body[0].startLat).equal(Number(data.start_lat));
+                    expect(response.body[0].startLong).equal(Number(data.start_long));
+                    expect(response.body[0].endLat).equal(Number(data.end_lat));
+                    expect(response.body[0].endLong).equal(Number(data.end_long));
+                    expect(response.body[0].riderName).equal(data.rider_name);
+                    expect(response.body[0].driverName).equal(data.driver_name);
+                    expect(response.body[0].driverVehicle).equal(data.driver_vehicle);
+                });
         });
     });
 
@@ -71,7 +84,7 @@ describe('API tests', () => {
                     driver_name:'Xendit',
                     driver_vehicle:'XYZ123'
                 })
-                .expect(200, {
+                .expect(500, {
                     error_code: 'VALIDATION_ERROR',
                     message: 'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
                 });
@@ -91,7 +104,7 @@ describe('API tests', () => {
                     driver_name:'Xendit',
                     driver_vehicle:'XYZ123'
                 })
-                .expect(200, {
+                .expect(500, {
                     error_code: 'VALIDATION_ERROR',
                     message: 'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
                 });
@@ -111,7 +124,7 @@ describe('API tests', () => {
                     driver_name:'Xendit',
                     driver_vehicle:'XYZ123'
                 })
-                .expect(200, {
+                .expect(500, {
                     error_code: 'VALIDATION_ERROR',
                     message: 'Rider name must be a non empty string'
                 });
@@ -131,7 +144,7 @@ describe('API tests', () => {
                     driver_name:'',
                     driver_vehicle:'XYZ123'
                 })
-                .expect(200, {
+                .expect(500, {
                     error_code: 'VALIDATION_ERROR',
                     message: 'Driver name must be a non empty string'
                 });
@@ -151,7 +164,7 @@ describe('API tests', () => {
                     driver_name:'Xendit',
                     driver_vehicle:''
                 })
-                .expect(200, {
+                .expect(500, {
                     error_code: 'VALIDATION_ERROR',
                     message: 'Driver vehicle name must be a non empty string'
                 });
@@ -185,7 +198,7 @@ describe('API tests', () => {
                 .send({
                     id:10000
                 })
-                .expect(200, {
+                .expect(404, {
                     error_code: 'RIDES_NOT_FOUND_ERROR',
                     message: 'Could not find this ride'
                 });
