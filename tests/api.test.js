@@ -3,12 +3,15 @@
 const request = require('supertest');
 const chai = require('chai');
 const expect = chai.expect;
+const assert = chai.assert;
 
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database(':memory:');
 
 const app = require('../src/app')(db);
 const buildSchemas = require('../src/schemas');
+
+const util = require('./../pagination');
 
 describe('API tests', () => {
     before((done) => {
@@ -172,6 +175,38 @@ describe('API tests', () => {
     });
 
     describe('GET /rides', () => {
+        it('should get all rides succesfully with pagination', async()=>{
+            const data = {
+                start_lat:'10',
+                end_lat:'10',
+                start_long:'20',
+                end_long:'25',
+                rider_name:'Jose',
+                driver_name:'Xendit',
+                driver_vehicle:'XYZ123'
+            };
+
+            let i = 0;
+            for(i = 0; i<9; i++){                
+                await request(app)
+                    .post('/rides')
+                    .send(data)
+                    .expect(200);
+            }
+
+            await request(app)
+                .get('/rides')
+                .send({
+                    pagination:true,
+                })
+                .expect(200)
+                .then(async (response) => {
+                    expect(response.body.length).equals(10);
+                });
+        });
+    });
+
+    describe('GET /rides', () => {
         it('should get all rides succesfully', async()=>{
             await request(app)
                 .get('/rides')
@@ -206,4 +241,80 @@ describe('API tests', () => {
     });
 
 
+    // Assertion made below
+    describe('Pagination test', () => {
+    
+        it('Page no 1', function() {
+            assert.deepEqual(util.pagination(10).pages, [1, 2]);
+            assert.deepEqual(util.pagination(10,2).pages, [1, 2]);
+            assert.deepEqual(util.pagination(10,2,10).pages, [1]);
+        });
+        
+        it('Page no 2', function() {
+            assert.deepEqual(util.pagination(20).pages, [1, 2, 3, 4]);
+        });
+        
+        it('Page no 3', function() {
+            assert.deepEqual(util.pagination(20,3).pages, [1, 2, 3, 4]);
+        });
+        
+        it('Page no 4', function() {
+            assert.deepEqual(util.pagination(20,4).pages, [1, 2, 3, 4]);
+        });
+        
+        it('Page no 10', function() {
+            console.log(util.pagination(20,7));
+            assert.deepEqual(util.pagination(20,7).pages, [7, 8, 9, 10, 11]);
+        });
+        
+        it('Page no 17', function() {
+            assert.deepEqual(util.pagination(20).pages, [14, 15, 16, 17, 18]);
+        });
+        
+        it('Page no 18', function() {
+            assert.deepEqual(util.pagination(20).pages, [15, 16, 17, 18, 19]);
+        });
+        
+        it('Page no 19', function() {
+            assert.deepEqual(util.pagination(20).pages, [15, 16, 17, 18, 19]);
+        });
+        
+        it('Page no 20', function() {
+            console.log(util.pagination(20,15,1));
+            assert.deepEqual(util.pagination(20,15,1).pages, [15, 16, 17, 18, 19]);
+        });
+        
+        it('Total 1 page - 5 items, currently on page 5, with 5 items per page', function() {
+            assert.deepEqual(util.pagination(5,5,5).pages, [1]);
+        });
+        
+        it('Total 4 page - 4 items, currently on page 3, with 1 item per page', function() {
+            assert.deepEqual(util.pagination(4,3,1).pages, [ 1, 2, 3, 4]);
+        });
+        
+        it('Total 2 page - 2 items, currently on page 2, with 1 item per page', function() {
+            assert.deepEqual(util.pagination(2,2,1).pages, [1, 2]);
+        });
+        
+        it('Total 1 page - 1 item', function() {
+            assert.deepEqual(util.pagination(1).pages, [1]);
+        });
+
+        it('Total 1 page - 1 item, currently in page -1 (invalid), with 5 item per page, and max page is 5 (default)', function() {
+            assert.deepEqual(util.pagination(1,-1).pages, [1]);
+        });
+
+        it('Total 2 page - 5 items, currently in page 10, with 1 item per page, and max page is 2', function() {
+            assert.deepEqual(util.pagination(5,10,1,2).pages, [4,5]);
+        });
+
+        it('Total 1 page - 5 items, currently in page 1, with 1 item per page, and max page is 2', function() {
+            assert.deepEqual(util.pagination(5,1,1,2).pages, [1,2]);
+        });
+
+        it('Total 2 page - 5 items, currently in page 2, with 1 item per page, and max page is 2 - current page somewhere in the middle', function() {
+            assert.deepEqual(util.pagination(5,3,1,2).pages, [2,3]);
+        });
+        
+    });
 });

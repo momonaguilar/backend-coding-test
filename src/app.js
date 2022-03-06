@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
 const logger = require('./../logger'); //winston logger
+const util = require('./../pagination');
 
 module.exports = (db) => {
     app.get('/health', (req, res) => res.send('Healthy'));
@@ -95,6 +96,8 @@ module.exports = (db) => {
     });
 
     app.get('/rides', (req, res) => {
+
+        let enableResultPagination = req && req.body && req.body.pagination || false;
         db.all('SELECT * FROM Rides', function (err, rows) {
             if (err) {
                 logger.error('Unknown server error: ' + err);
@@ -113,7 +116,17 @@ module.exports = (db) => {
             }
 
             logger.info('GET /rides' + ' status OK');
-            res.send(rows);
+
+            let pageContent = rows;
+
+            if (enableResultPagination === true) {
+                console.log(pageContent);
+                let totalItems = rows.length;
+                let x = util.pagination(totalItems);
+                pageContent = rows.slice(x.startIndex, x.endIndex);
+            }
+
+            res.status(200).send(pageContent);
         });
     });
 
