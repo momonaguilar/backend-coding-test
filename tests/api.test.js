@@ -262,26 +262,24 @@ describe('API tests', () => {
             assert.deepEqual(util.pagination(20,4).pages, [1, 2, 3, 4]);
         });
         
-        it('Page no 10', function() {
-            console.log(util.pagination(20,7));
-            assert.deepEqual(util.pagination(20,7).pages, [7, 8, 9, 10, 11]);
+        it('Total 5 page - 20 items, current page at 7, 3 items per page', function() {
+            assert.deepEqual(util.pagination(20,7,3).pages, [3, 4, 5, 6, 7]);
         });
         
-        it('Page no 17', function() {
-            assert.deepEqual(util.pagination(20).pages, [14, 15, 16, 17, 18]);
+        it('Total 1 page - 20 items, current page at 17, 20 items per page', function() {
+            assert.deepEqual(util.pagination(20,17,20).pages, [1]);
         });
         
-        it('Page no 18', function() {
-            assert.deepEqual(util.pagination(20).pages, [15, 16, 17, 18, 19]);
+        it('Total 5 page - 20 items, nil current page, nil item per page', function() {
+            assert.deepEqual(util.pagination(20,null,null,5).pages, [1,2,3,4,5]);
         });
         
-        it('Page no 19', function() {
-            assert.deepEqual(util.pagination(20).pages, [15, 16, 17, 18, 19]);
+        it('Total 5 pages - 100 items, current page at 15', function() {
+            assert.deepEqual(util.pagination(100,15).pages, [13, 14, 15, 16, 17]);
         });
         
-        it('Page no 20', function() {
-            console.log(util.pagination(20,15,1));
-            assert.deepEqual(util.pagination(20,15,1).pages, [15, 16, 17, 18, 19]);
+        it('Total 5 pages - 20 items, current page at 20, 1 item per page', function() {
+            assert.deepEqual(util.pagination(20,20,1).pages, [ 16, 17, 18, 19, 20]);
         });
         
         it('Total 1 page - 5 items, currently on page 5, with 5 items per page', function() {
