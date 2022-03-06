@@ -128,10 +128,10 @@ module.exports = (db) => {
             }
 
             if (rows.length === 0) {
-                logger.error('Could not find any rides');
+                logger.error('Could not find this ride');
                 return res.send({
                     error_code: 'RIDES_NOT_FOUND_ERROR',
-                    message: 'Could not find any rides'
+                    message: 'Could not find this ride'
                 });
             }
 

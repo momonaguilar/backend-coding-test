@@ -31,7 +31,7 @@ describe('API tests', () => {
     });
 
     describe('GET /rides', () => {
-        it('failed test get all rides', async()=>{
+        it('should fail to get all rides, couldn\'t find any rides', async()=>{
             await request(app)
                 .get('/rides')
                 .expect(200, {
@@ -42,7 +42,7 @@ describe('API tests', () => {
     });
 
     describe('POST /rides', async() => {
-        it('should add rides', async() => {
+        it('should add rides successfully', async() => {
             await request(app)
                 .post('/rides')
                 .send({
@@ -159,7 +159,7 @@ describe('API tests', () => {
     });
 
     describe('GET /rides', () => {
-        it('test get all rides', async()=>{
+        it('should get all rides succesfully', async()=>{
             await request(app)
                 .get('/rides')
                 .expect(200);
@@ -167,7 +167,7 @@ describe('API tests', () => {
     });
 
     describe('GET /rides/:id', () => {
-        it("test get single user",async()=>{
+        it('should get single ride successfully',async()=>{
             await request(app)
                 .get('/rides')
                 .send({
@@ -179,7 +179,7 @@ describe('API tests', () => {
     });
 
     describe('GET /rides/:id', () => {
-        it("fail test get single user",async()=>{
+        it('should fail to get single ride, couldn\'t find this ride' ,async()=>{
             await request(app)
                 .get('/rides/:id')
                 .send({
@@ -187,7 +187,7 @@ describe('API tests', () => {
                 })
                 .expect(200, {
                     error_code: 'RIDES_NOT_FOUND_ERROR',
-                    message: 'Could not find any rides'
+                    message: 'Could not find this ride'
                 });
         });
     });
