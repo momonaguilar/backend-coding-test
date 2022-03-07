@@ -12,10 +12,10 @@ const dbUtil = require('../util/dbUtil');
 const paginator = require('../util/paginator');
 
 module.exports = (db) => {
+
     app.get('/health', (req, res) => res.status(200).send('Healthy'));
 
     app.post('/rides', jsonParser, async (req, res) => {
-
         let validate = validator.validate(req, res);
         if (validate.error_code.length !== 0)
         {
@@ -44,10 +44,8 @@ module.exports = (db) => {
         res.status(200).send(result);     
     });
 
-    app.get('/rides/:id', async(req, res) => {
-        let id = Number(req.params.id);
-        console.log('reymond...');
-        logger.info('Reymond' + req.params.id);
+    app.get('/rides/:rideID', async(req, res) => {
+        let id = Number(req.params.rideID);
         if (typeof id !== 'number') {
             return res.status(404).send('Invalid parameters!');
         }

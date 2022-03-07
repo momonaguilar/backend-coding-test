@@ -41,7 +41,7 @@ const postRides = (db, req, res) => {
 const getRidesById = (db, req, res) => {
     return new Promise(resolve => {
         const data = [];
-        let id = req.params.id;
+        let id = req.params.rideID;
 
         const sqlQuery = 'SELECT * FROM Rides WHERE rideID = ?';
 
