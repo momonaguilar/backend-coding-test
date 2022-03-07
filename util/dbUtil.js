@@ -42,10 +42,12 @@ const getRidesById = (db, req, res) => {
     return new Promise(resolve => {
         const data = [];
         let id = req.params.id;
+
         const sqlQuery = 'SELECT * FROM Rides WHERE rideID = ?';
+
         db.all(sqlQuery, [id], function (err, rows) {
             if (err) {
-                //logger.error('Unknown server error: ' + err);
+                logger.error('Unknown server error: ' + err);
                 return res.status(500).send({
                     error_code: 'SERVER_ERROR',
                     message: 'Unknown error'
@@ -53,14 +55,13 @@ const getRidesById = (db, req, res) => {
             }
 
             if (rows.length === 0) {
-                //logger.error('Could not find this ride');
+                logger.error('Could not find this ride');
                 return res.status(404).send({
                     error_code: 'RIDES_NOT_FOUND_ERROR',
                     message: 'Could not find this ride'
                 });
             }
 
-            logger.info('GET /rides/' + req.params.id + ' status OK');
             if(rows && rows.length > 0){
                 rows.forEach((row)=> data.push(row));
             }
@@ -75,7 +76,7 @@ const getRides = (db, req, res) => {
         const sqlQuery = 'SELECT * FROM Rides';
         db.all(sqlQuery, function (err, rows) {
             if (err) {
-                //TODO: logger.error('Unknown server error: ' + err);
+                logger.error('Unknown server error: ' + err);
                 return res.status(500).send({
                     error_code: 'SERVER_ERROR',
                     message: 'Unknown error'
@@ -83,14 +84,12 @@ const getRides = (db, req, res) => {
             }
 
             if (rows.length === 0) {
-                //TODO: logger.error('Could not find any rides');
+                logger.error('Could not find any rides');
                 return res.status(404).send({
                     error_code: 'RIDES_NOT_FOUND_ERROR',
                     message: 'Could not find any rides'
                 });
             }
-
-            logger.info('GET /rides' + ' status OK');
 
             if(rows && rows.length > 0){
                 rows.forEach((row)=> data.push(row));
