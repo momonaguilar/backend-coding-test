@@ -11,7 +11,8 @@ const db = new sqlite3.Database(':memory:');
 const app = require('../src/app')(db);
 const buildSchemas = require('../src/schemas');
 
-const util = require('./../pagination');
+const util = require('./../util/pagination');
+const validator = require('../util/validator');
 
 describe('API tests', () => {
     before((done) => {
@@ -241,7 +242,7 @@ describe('API tests', () => {
     });
 
 
-    // Assertion made below
+    // Pagination testing
     describe('Pagination test', () => {
     
         it('Page no 1', function() {
@@ -315,4 +316,51 @@ describe('API tests', () => {
         });
         
     });
+
+    // Validator testing
+    describe('Validation test', () => {
+        const reqSimulator = {
+            body: {
+                start_lat: '10',
+                end_lat:'10',
+                start_long:'20',
+                end_long:'25',
+                rider_name:'Jose',
+                driver_name:'Xendit',
+                driver_vehicle:'XYZ123'
+            }
+        };
+        it('Validation passed', function() {
+            assert.deepEqual(validator.validate(reqSimulator).error_code, '');
+        });
+        it('Validation failed - invalid start lat value', function() {
+            reqSimulator.body.start_lat = '-100';
+            assert.deepEqual(validator.validate(reqSimulator).error_code, 'VALIDATION_ERROR');
+        });
+        it('Validation failed - invalid end lat value', function() {
+            reqSimulator.body.end_lat = '-100';
+            assert.deepEqual(validator.validate(reqSimulator).error_code, 'VALIDATION_ERROR');
+        });
+        it('Validation failed - invalid start long value', function() {
+            reqSimulator.body.end_lat = '-1000';
+            assert.deepEqual(validator.validate(reqSimulator).error_code, 'VALIDATION_ERROR');
+        });
+        it('Validation failed - invalid end long value', function() {
+            reqSimulator.body.end_lat = '-1000';
+            assert.deepEqual(validator.validate(reqSimulator).error_code, 'VALIDATION_ERROR');
+        });
+        it('Validation failed - invalid rider name value', function() {
+            reqSimulator.body.rider_name = '';
+            assert.deepEqual(validator.validate(reqSimulator).error_code, 'VALIDATION_ERROR');
+        });
+        it('Validation failed - invalid driver name value', function() {
+            reqSimulator.body.driver_name = '';
+            assert.deepEqual(validator.validate(reqSimulator).error_code, 'VALIDATION_ERROR');
+        });
+        it('Validation failed - invalid rider name value', function() {
+            reqSimulator.body.driver_vehicle = '';
+            assert.deepEqual(validator.validate(reqSimulator).error_code, 'VALIDATION_ERROR');
+        });
+    });
+
 });
