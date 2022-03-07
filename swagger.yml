@@ -1,0 +1,125 @@
+openapi: 3.0.0
+info:
+  title: Riders API
+  description: Riders API
+  version: 0.1.9
+servers:
+  - url: http://localhost:8010/
+    description: Optional server description, e.g. Main (production) server
+tags:
+  - name: Rides
+paths:
+  /health:
+    get:
+      summary: Check API health
+      description: Check API health
+      tags: ["Rides"]
+      responses:
+        '200':    # status code
+          description: Success
+  /rides: 
+    post: 
+      summary: Add a new ride
+      consumes:
+        - application/json
+      tags: ["Rides"]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_lat:
+                  type: integer
+                  default: 90
+                end_lat:
+                  type: integer
+                  default: 90
+                start_long:
+                  type: integer
+                  default: 90
+                end_long:
+                  type: integer
+                  default: 90
+                rider_name:
+                  type: string
+                  default: 'Mr Rider'
+                driver_name:
+                  type: string
+                  default: 'Mr Driver'
+                driver_vehicle:
+                  type: string
+                  default: 'Vehicle default'
+      parameters: 
+      - name: start_lat
+        description: Start latitude, accepts -90 to 90
+        in: formData 
+        required: true 
+        type: integer
+        default: 90
+      - name: end_lat
+        description: End latitude, accepts -180 to 180
+        in: formData 
+        required: true 
+        type: integer
+        default: 90
+      - name: start_long
+        description: Start longitude, accepts -90 to 90
+        in: formData 
+        required: true 
+        type: integer
+        default: 90
+      - name: end_long
+        description: Start longitude, accepts -180 to 180
+        in: formData 
+        required: true 
+        type: integer
+        default: 90
+      - name: rider_name
+        description: Name of rider
+        in: formData 
+        required: true 
+        type: String
+        default: 'Mr Rider'
+      - name: driver_name
+        description: Name of driver
+        in: formData 
+        required: true 
+        type: String
+        default: 'Mr Driver'
+      - name: driver_vehicle
+        description: Driver vehicle
+        in: formData 
+        required: true 
+        type: String
+        default: 'Vehicle default'
+      responses:  
+        200: 
+          description: Created  
+        500: 
+          description: Server Error  
+    get:
+      summary: Get all rides 
+      description: Get all rides 
+      tags: ["Rides"]
+      responses:  
+        200: 
+          description: Success
+        404: 
+          description: Not found
+  /rides/{rideID}: 
+    get:
+      description: Get all rides
+      tags: ["Rides"]
+      parameters: 
+      - in: path
+        name: rideID
+        description: Ride ID to search
+        required: true 
+        schema:
+          type: integer
+      responses:  
+        200: 
+          description: Success
+        404: 
+          description: Not found  

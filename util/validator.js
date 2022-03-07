@@ -3,7 +3,7 @@ const logger = require('./../logger'); //winston logger
 class Validator {
 
     validate (req) {
-
+        
         const startLatitude = Number(req.body.start_lat);
         const startLongitude = Number(req.body.start_long);
         const endLatitude = Number(req.body.end_lat);
