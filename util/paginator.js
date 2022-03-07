@@ -1,7 +1,7 @@
 
-class Utility {
+class Paginator {
 
-    pagination (
+    paginate (
         totalItems,
         currentPage = 1,
         recordsPerPage = 5,
@@ -69,4 +69,4 @@ class Utility {
 
 }
 
-module.exports = new Utility();
+module.exports = new Paginator();

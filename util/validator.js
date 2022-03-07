@@ -12,8 +12,28 @@ class Validator {
         const driverName = req.body.driver_name;
         const driverVehicle = req.body.driver_vehicle;
 
+        let err = '';
+        if (typeof riderName !== 'string' ){
+            err = 'rider name, expects string, got ' + typeof(riderName);
+        } else if (typeof driverName !== 'string'){
+            err = 'driver name, expects string, got ' + typeof(driverName);
+        } else if (typeof driverVehicle !== 'string'){
+            err = 'driver vehicle, expects string, got ' + typeof(driverVehicle);
+        }
+
+        if (err.length !== 0){
+            err = 'Invalid type: ' + err;
+            logger.error(err);
+            return ({
+                error_code: 'INVALID_TYPE_ERROR',
+                message: err
+            });
+        }
+
+
+
         if (startLatitude < -90 || startLatitude > 90 || startLongitude < -180 || startLongitude > 180) {
-            let err = 'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively';
+            err = 'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively';
             logger.error(err);
             return ({
                 error_code: 'VALIDATION_ERROR',
@@ -22,7 +42,7 @@ class Validator {
         }
 
         if (endLatitude < -90 || endLatitude > 90 || endLongitude < -180 || endLongitude > 180) {
-            let err = 'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively';
+            err = 'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively';
             logger.error(err);
             return ({
                 error_code: 'VALIDATION_ERROR',
@@ -31,7 +51,7 @@ class Validator {
         }
 
         if (typeof riderName !== 'string' || riderName.length < 1) {
-            let err = 'Rider name must be a non empty string';
+            err = 'Rider name must be a non empty string';
             logger.error(err);
             return ({
                 error_code: 'VALIDATION_ERROR',
@@ -40,7 +60,7 @@ class Validator {
         }
 
         if (typeof driverName !== 'string' || driverName.length < 1) {
-            let err = 'Driver name must be a non empty string';
+            err = 'Driver name must be a non empty string';
             logger.error(err);
             return ({
                 error_code: 'VALIDATION_ERROR',
@@ -49,7 +69,7 @@ class Validator {
         }
 
         if (typeof driverVehicle !== 'string' || driverVehicle.length < 1) {
-            let err = 'Driver vehicle name must be a non empty string';
+            err = 'Driver vehicle name must be a non empty string';
             logger.error(err);
             return ({
                 error_code: 'VALIDATION_ERROR',
