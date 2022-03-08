@@ -24,6 +24,7 @@
   "author": "Bo",
   "license": "ISC",
   "dependencies": {
+    "artillery": "^2.0.0-12",
     "body-parser": "^1.19.0",
     "chai": "^4.3.6",
     "express": "^4.16.4",
@@ -35,6 +36,7 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^6.0.0-beta.0",
     "eslint": "^6.0.0",
     "jest": "^27.5.1",
     "mocha": "^6.1.4",
