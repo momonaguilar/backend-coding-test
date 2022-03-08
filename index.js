@@ -4,7 +4,7 @@ const port = 8010;
 
 const swaggerUI = require('swagger-ui-express');
 const YAML =  require('yamljs');
-const swaggerDocument = YAML.load('./swagger.yml');
+const swaggerDocument = YAML.load('./swagger.yaml');
 
 const logger = require('./logger'); //winston logger
 
