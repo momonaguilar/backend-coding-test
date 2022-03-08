@@ -1,11 +1,15 @@
 openapi: 3.0.0
 info:
-  title: Riders API
-  description: Riders API
+  title: Backend Coding Test - Riders API
+  description: For Xendit backend coding test only.
+
+    ANGKAS API is an imaginary api service that lets user hop-on and off from someone's bike, more of a Grab Car concept on a motorbike world.
+
+    This API service serves a middleware component to that front-end applications call to perform operations such as add, retrieve rides from the database.
   version: 0.1.9
 servers:
   - url: http://localhost:8010/
-    description: Optional server description, e.g. Main (production) server
+    description: Development server
 tags:
   - name: Rides
 paths:
@@ -21,6 +25,8 @@ paths:
     post: 
       summary: Add a new ride
       consumes:
+        - application/json
+      produces:
         - application/json
       tags: ["Rides"]
       requestBody:
@@ -99,9 +105,40 @@ paths:
         500: 
           description: Server Error  
     get:
-      summary: Get all rides 
-      description: Get all rides 
+      summary: Get all rides
+      description: |
+        Retrieve all rides.
+        
+        Notes to dev: For paginated result, please take note of below:
+
+        *totalItem - total records<br>
+        *currentPage = current page to show; default to 1<br>
+        *recordsPerPage = number of records to show per page, default to 5<br>
+        *maxPages = maximum number of paginated page to hold results; default to 5 <br>
+
+        The pagination will return an object with below structure:
+        <code><br>
+        {<br>
+         totalItems: [X total records fetched],<br>
+         currentPage: [X current page],<br>
+         recordsPerPage: [X records per page],<br>
+         totalPages: [calculated X total pages],<br>
+         pageToShow: [calculated X pages to show],<br>
+         startPage: [calculated X start page],<br>
+         endPage: [calculated X end page],<br>
+         firstRecordIndexOfCurrentPage: [start index, the start record to show from this page]<br>
+         lastRecordIndexOfCurrentPage: [end index, the last record to show in this page]<br>
+         pages: [calculated array of pages to show]<br>
+        }<br>
+        </code>
       tags: ["Rides"]
+      parameters:
+        - name: pagination
+          in: query
+          description: Optional; returns paginated results
+          required: false
+          type: boolean
+          default: false
       responses:  
         200: 
           description: Success
