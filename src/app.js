@@ -33,7 +33,7 @@ module.exports = (db) => {
     app.get('/rides', async(req, res) => {
         var result = await dbUtil.getRides(db, req, res);
         var enableResultPagination = req && req.params && req.params.pagination || false;
-
+        
         if (enableResultPagination) {
             let totalItems = result.length;
             let pagedResult = paginator.paginate(totalItems);
@@ -51,7 +51,6 @@ module.exports = (db) => {
         }
 
         const result = await dbUtil.getRidesById(db, req, res);
-        logger.info('Reymond' + result);
         res.status(200).send(result);    
     });
 

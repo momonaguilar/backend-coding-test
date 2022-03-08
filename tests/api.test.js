@@ -13,6 +13,7 @@ const buildSchemas = require('../src/schemas');
 
 const paginator = require('./../util/paginator');
 const validator = require('../util/validator');
+const { faker } = require("@faker-js/faker");
 
 describe('API tests', () => {
     before((done) => {
@@ -50,13 +51,13 @@ describe('API tests', () => {
     describe('POST /rides', async() => {
         it('should add rides successfully', async() => {
             const data = {
-                start_lat:'10',
-                end_lat:'10',
-                start_long:'20',
-                end_long:'25',
-                rider_name:'Jose',
-                driver_name:'Xendit',
-                driver_vehicle:'XYZ123'
+                start_lat: faker.datatype.number({ min: -90, max: 90 }).toString(),
+                end_lat: faker.datatype.number({ min: -90, max: 90 }).toString(),
+                start_long: faker.datatype.number({ min: -180, max: 180 }).toString(),
+                end_long: faker.datatype.number({ min: -180, max: 180 }).toString(),
+                rider_name: faker.name.findName(),
+                driver_name: faker.name.findName(),
+                driver_vehicle: faker.vehicle.vehicle()
             };
             await request(app)
                 .post('/rides')
@@ -81,16 +82,16 @@ describe('API tests', () => {
                 .post('/rides')
                 .send({
                     start_lat:10000,
-                    end_lat:'10',
-                    start_long:'20',
-                    end_long:'25',
-                    rider_name:'Jose',
-                    driver_name:'Xendit',
-                    driver_vehicle:'XYZ123'
+                    end_lat: faker.datatype.number({ min: -90, max: 90 }).toString(),
+                    start_long: faker.datatype.number({ min: -180, max: 180 }).toString(),
+                    end_long: faker.datatype.number({ min: -180, max: 180 }).toString(),
+                    rider_name: faker.name.findName(),
+                    driver_name: faker.name.findName(),
+                    driver_vehicle: faker.vehicle.vehicle()
                 })
                 .expect(500, {
                     error_code: 'VALIDATION_ERROR',
-                    message: 'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+                    message: 'Start latitude and longitude must be between -90 to 90 and -180 to 180 degrees respectively'
                 });
         });
     });
@@ -100,17 +101,17 @@ describe('API tests', () => {
             await request(app)
                 .post('/rides')
                 .send({
-                    start_lat:'90',
+                    start_lat: faker.datatype.number({ min: -90, max: 90 }).toString(),
                     end_lat:'10000',
-                    start_long:'20',
-                    end_long:'25',
-                    rider_name:'Jose',
-                    driver_name:'Xendit',
-                    driver_vehicle:'XYZ123'
+                    start_long: faker.datatype.number({ min: -190, max: 180 }).toString(),
+                    end_long: faker.datatype.number({ min: -180, max: 180 }).toString(),
+                    rider_name: faker.name.findName(),
+                    driver_name: faker.name.findName(),
+                    driver_vehicle: faker.vehicle.vehicle()
                 })
                 .expect(500, {
                     error_code: 'VALIDATION_ERROR',
-                    message: 'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+                    message: 'End latitude and longitude must be between -90 to 90 and -180 to 180 degrees respectively'
                 });
         });
     });
@@ -120,13 +121,13 @@ describe('API tests', () => {
             await request(app)
                 .post('/rides')
                 .send({
-                    start_lat:'90',
-                    end_lat:'90',
-                    start_long:'20',
-                    end_long:'25',
+                    start_lat: faker.datatype.number({ min: -90, max: 90 }).toString(),
+                    end_lat: faker.datatype.number({ min: -90, max: 90 }).toString(),
+                    start_long: faker.datatype.number({ min: -180, max: 180 }).toString(),
+                    end_long: faker.datatype.number({ min: -180, max: 180 }).toString(),
                     rider_name: '',
-                    driver_name:'Xendit',
-                    driver_vehicle:'XYZ123'
+                    driver_name: faker.name.findName(),
+                    driver_vehicle: faker.vehicle.vehicle()
                 })
                 .expect(500, {
                     error_code: 'VALIDATION_ERROR',
@@ -140,13 +141,13 @@ describe('API tests', () => {
             await request(app)
                 .post('/rides')
                 .send({
-                    start_lat:'90',
-                    end_lat:'90',
-                    start_long:'20',
-                    end_long:'25',
-                    rider_name: 'Jose',
-                    driver_name:'',
-                    driver_vehicle:'XYZ123'
+                    start_lat: faker.datatype.number({ min: -90, max: 90 }).toString(),
+                    end_lat: faker.datatype.number({ min: -90, max: 90 }).toString(),
+                    start_long: faker.datatype.number({ min: -180, max: 180 }).toString(),
+                    end_long: faker.datatype.number({ min: -180, max: 180 }).toString(),
+                    rider_name: faker.name.findName(),
+                    driver_name: '',
+                    driver_vehicle: faker.vehicle.vehicle()
                 })
                 .expect(500, {
                     error_code: 'VALIDATION_ERROR',
@@ -160,13 +161,13 @@ describe('API tests', () => {
             await request(app)
                 .post('/rides')
                 .send({
-                    start_lat:'90',
-                    end_lat:'90',
-                    start_long:'20',
-                    end_long:'25',
-                    rider_name: 'Jose',
-                    driver_name:'Xendit',
-                    driver_vehicle:''
+                    start_lat: faker.datatype.number({ min: -90, max: 90 }).toString(),
+                    end_lat: faker.datatype.number({ min: -90, max: 90 }).toString(),
+                    start_long: faker.datatype.number({ min: -180, max: 180 }).toString(),
+                    end_long: faker.datatype.number({ min: -180, max: 180 }).toString(),
+                    rider_name: faker.name.findName(),
+                    driver_name: faker.name.findName(),
+                    driver_vehicle: ''
                 })
                 .expect(500, {
                     error_code: 'VALIDATION_ERROR',
@@ -177,18 +178,19 @@ describe('API tests', () => {
 
     describe('GET /rides', () => {
         it('should get all rides succesfully with pagination', async()=>{
-            const data = {
-                start_lat:'10',
-                end_lat:'10',
-                start_long:'20',
-                end_long:'25',
-                rider_name:'Jose',
-                driver_name:'Xendit',
-                driver_vehicle:'XYZ123'
+            
+            let data = {
+                start_lat: faker.datatype.number({ min: -90, max: 90 }).toString(),
+                end_lat: faker.datatype.number({ min: -90, max: 90 }).toString(),
+                start_long: faker.datatype.number({ min: -180, max: 180 }).toString(),
+                end_long: faker.datatype.number({ min: -180, max: 180 }).toString(),
+                rider_name: faker.name.findName(),
+                driver_name: faker.name.findName(),
+                driver_vehicle: faker.vehicle.vehicle()
             };
-
             let i = 0;
-            for(i = 0; i<9; i++){                
+            for(i = 0; i<9; i++){
+
                 await request(app)
                     .post('/rides')
                     .send(data)
@@ -218,13 +220,13 @@ describe('API tests', () => {
     describe('GET /rides/:id', () => {
         it('should get single ride successfully',async()=>{
             const data = {
-                start_lat:'10',
-                end_lat:'10',
-                start_long:'20',
-                end_long:'25',
-                rider_name:'Jose',
-                driver_name:'Xendit',
-                driver_vehicle:'XYZ123'
+                start_lat: faker.datatype.number({ min: -90, max: 90 }).toString(),
+                end_lat: faker.datatype.number({ min: -90, max: 90 }).toString(),
+                start_long: faker.datatype.number({ min: -180, max: 180 }).toString(),
+                end_long: faker.datatype.number({ min: -180, max: 180 }).toString(),
+                rider_name: faker.name.findName(),
+                driver_name: faker.name.findName(),
+                driver_vehicle: faker.vehicle.vehicle()
             };
 
             let lastId = 0;
@@ -275,21 +277,20 @@ describe('API tests', () => {
     // Pagination testing
     describe('Pagination test', () => {
     
-        it('Page no 1', function() {
+        it('Total Page 2', function() {
             assert.deepEqual(paginator.paginate(10).pages, [1, 2]);
             assert.deepEqual(paginator.paginate(10,2).pages, [1, 2]);
-            assert.deepEqual(paginator.paginate(10,2,10).pages, [1]);
         });
         
-        it('Page no 2', function() {
+        it('Total page 4 - 20 items, current page at 1, 5 items per page', function() {
             assert.deepEqual(paginator.paginate(20).pages, [1, 2, 3, 4]);
         });
         
-        it('Page no 3', function() {
+        it('Total page 4 - 20 items, current page 3, 5 items per page', function() {
             assert.deepEqual(paginator.paginate(20,3).pages, [1, 2, 3, 4]);
         });
         
-        it('Page no 4', function() {
+        it('Total page 4, 20 items, current page 4, 5 items per page', function() {
             assert.deepEqual(paginator.paginate(20,4).pages, [1, 2, 3, 4]);
         });
         
@@ -351,13 +352,13 @@ describe('API tests', () => {
     describe('Validation test', () => {
         const reqSimulator = {
             body: {
-                start_lat: '10',
-                end_lat:'10',
-                start_long:'20',
-                end_long:'25',
-                rider_name:'Jose',
-                driver_name:'Xendit',
-                driver_vehicle:'XYZ123'
+                start_lat: faker.datatype.number({ min: -90, max: 90 }).toString(),
+                end_lat: faker.datatype.number({ min: -90, max: 90 }).toString(),
+                start_long: faker.datatype.number({ min: -180, max: 180 }).toString(),
+                end_long: faker.datatype.number({ min: -180, max: 180 }).toString(),
+                rider_name: faker.name.findName(),
+                driver_name: faker.name.findName(),
+                driver_vehicle: faker.vehicle.vehicle()
             }
         };
         it('Validation passed', function() {
