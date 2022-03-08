@@ -1,0 +1,24 @@
+config:
+  target: "http://localhost:8010"
+  phases:
+    - duration: 10
+      arrivalRate: 20
+      name: "Warming up"
+  processor: "./load.test.processor.js"
+ 
+scenarios:
+  - name: "Get rides"
+    flow:
+      - post:
+          url: "/rides"
+          beforeRequest: generateRide
+          json:
+            start_lat: "{{ start_lat }}"
+            end_lat: "{{ end_lat }}"
+            start_long: "{{ start_long }}"
+            end_long: "{{ end_long }}"
+            rider_name: "{{ rider_name }}"
+            driver_name: "{{ driver_name }}"
+            driver_vehicle: "{{ driver_vehicle }}"
+      - get:
+          url: "/rides"
