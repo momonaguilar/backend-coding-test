@@ -3,7 +3,6 @@ const logger = require('./../logger'); //winston logger
 class Validator {
 
     validate (req) {
-        
         const startLatitude = Number(req.body.start_lat);
         const startLongitude = Number(req.body.start_long);
         const endLatitude = Number(req.body.end_lat);
@@ -33,7 +32,7 @@ class Validator {
 
 
         if (startLatitude < -90 || startLatitude > 90 || startLongitude < -180 || startLongitude > 180) {
-            err = 'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively';
+            err = 'Start latitude and longitude must be between -90 to 90 and -180 to 180 degrees respectively';
             logger.error(err);
             return ({
                 error_code: 'VALIDATION_ERROR',
@@ -42,7 +41,7 @@ class Validator {
         }
 
         if (endLatitude < -90 || endLatitude > 90 || endLongitude < -180 || endLongitude > 180) {
-            err = 'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively';
+            err = 'End latitude and longitude must be between -90 to 90 and -180 to 180 degrees respectively';
             logger.error(err);
             return ({
                 error_code: 'VALIDATION_ERROR',
