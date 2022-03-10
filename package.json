@@ -10,7 +10,10 @@
     "test": "mocha tests",
     "coverage": "nyc npm run test",
     "start": "node index.js",
-    "lint": "eslint ./"
+    "lint": "eslint ./",
+    "load:test": "artillery run ./tests/load.test.yaml",
+    "forever_start": "forever start index.js",
+    "forever_stop": "forever stop index.js"
   },
   "pre-push": {
     "run": [
@@ -38,6 +41,7 @@
   "devDependencies": {
     "@faker-js/faker": "^6.0.0-beta.0",
     "eslint": "^6.0.0",
+    "forever": "^4.0.3",
     "jest": "^27.5.1",
     "mocha": "^6.1.4",
     "nyc": "^15.1.0",

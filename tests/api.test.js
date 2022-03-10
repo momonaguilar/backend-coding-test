@@ -13,7 +13,7 @@ const buildSchemas = require('../src/schemas');
 
 const paginator = require('./../util/paginator');
 const validator = require('../util/validator');
-const { faker } = require("@faker-js/faker");
+const { faker } = require('@faker-js/faker');
 
 describe('API tests', () => {
     before((done) => {

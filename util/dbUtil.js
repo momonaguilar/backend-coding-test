@@ -11,17 +11,17 @@ const postRides = (db, req, res) => {
         
         db.run(sqlQuery, values, async function (err) {
             if (err) {
-                //TODO: logger.error('Unknown server error: ' + err);
+                logger.error('Unknown server error: ' + err);
                 return res.status(500).send({
                     error_code: 'SERVER_ERROR',
                     message: 'Unknown error'
                 });
             }
 
-            sqlQuery = 'SELECT * FROM Rides WHERE rideID = ?';
+            let sqlQuery = 'SELECT * FROM Rides WHERE rideID = ?';
             await db.all(sqlQuery, [this.lastID], function (err, rows) {
                 if (err) {
-                    //TODO: logger.error('Unknown server error: ' + err);
+                    logger.error('Unknown server error: ' + err);
                     return res.status(500).send({
                         error_code: 'SERVER_ERROR',
                         message: 'Unknown error'
