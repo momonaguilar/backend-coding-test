@@ -13,7 +13,10 @@ const paginator = require('../util/paginator');
 
 module.exports = (db) => {
 
-    app.get('/health', (req, res) => res.status(200).send('Healthy'));
+    app.get('/health', (req, res) => {
+        logger.info('GET /health');
+        res.status(200).send('Healthy');
+    });
 
     app.post('/rides', jsonParser, async (req, res) => {
         let validate = validator.validate(req, res);
@@ -25,8 +28,6 @@ module.exports = (db) => {
             });
         }
         var result = await dbUtil.postRides(db,req,res);
-
-        logger.info('Result: ' + JSON.stringify(result));
         res.status(200).send(result);    
     });
 
@@ -40,7 +41,6 @@ module.exports = (db) => {
             result = result.slice(pagedResult.firstRecordIndexOfCurrentPage, 
                 pagedResult.lastRecordIndexOfCurrentPage);
         }
-
         res.status(200).send(result);     
     });
 
