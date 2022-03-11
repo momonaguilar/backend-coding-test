@@ -28,7 +28,7 @@ const postRides = (db, req, res) => {
                     });
                 }
 
-                logger.info('POST /rides' + JSON.stringify(rows));
+                logger.info('POST /rides ' + JSON.stringify(rows));
                 if(rows && rows.length > 0) {
                     rows.forEach((row)=> data.push(row));
                 }
@@ -42,6 +42,7 @@ const getRidesById = (db, req, res) => {
     return new Promise(resolve => {
         const data = [];
         let id = req.params.rideID;
+        logger.info('GET /rides/' + id);
 
         const sqlQuery = 'SELECT * FROM Rides WHERE rideID = ?';
 
@@ -65,6 +66,7 @@ const getRidesById = (db, req, res) => {
             if(rows && rows.length > 0){
                 rows.forEach((row)=> data.push(row));
             }
+            logger.info('Result: Got ' + JSON.stringify(data.length) + ' records.');
             resolve(data);
         });
     });
@@ -94,6 +96,7 @@ const getRides = (db, req, res) => {
             if(rows && rows.length > 0){
                 rows.forEach((row)=> data.push(row));
             }
+            logger.info('GET /rides - Got ' + JSON.stringify(data.length) + ' records.');
             resolve(data);
 
         });

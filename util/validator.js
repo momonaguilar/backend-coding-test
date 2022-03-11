@@ -10,7 +10,7 @@ class Validator {
         const riderName = req.body.rider_name;
         const driverName = req.body.driver_name;
         const driverVehicle = req.body.driver_vehicle;
-
+        
         let err = '';
         if (typeof riderName !== 'string' ){
             err = 'rider name, expects string, got ' + typeof(riderName);

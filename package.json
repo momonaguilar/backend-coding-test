@@ -11,9 +11,11 @@
     "coverage": "nyc npm run test",
     "start": "node index.js",
     "lint": "eslint ./",
-    "load:test": "artillery run ./tests/load.test.yaml",
-    "forever_start": "forever start index.js",
-    "forever_stop": "forever stop index.js"
+    "load:test": "npm run foreverstart && npm run artilleryrun && npm run foreverstop",
+    "artilleryrun": " $(npm bin)/artillery run ./tests/load.test.yaml",
+    "foreverstart": "$(npm bin)/forever start --minUptime 1000 --spinSleepTime 1000 index.js",
+    "foreverlist": "$(npm bin)/forever list",
+    "foreverstop": "$(npm bin)/forever stopall"
   },
   "pre-push": {
     "run": [
@@ -27,7 +29,6 @@
   "author": "Bo",
   "license": "ISC",
   "dependencies": {
-    "artillery": "^2.0.0-12",
     "body-parser": "^1.19.0",
     "chai": "^4.3.6",
     "express": "^4.16.4",
@@ -40,6 +41,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^6.0.0-beta.0",
+    "artillery": "^2.0.0-12",
     "eslint": "^6.0.0",
     "forever": "^4.0.3",
     "jest": "^27.5.1",
