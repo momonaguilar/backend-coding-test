@@ -1,6 +1,7 @@
 'use strict';
 
-const port = 8010;
+const dotenv = require('dotenv');
+dotenv.config();
 
 const swaggerUI = require('swagger-ui-express');
 const YAML =  require('yamljs');
@@ -17,8 +18,9 @@ db.serialize( async() => {
     await buildSchemas(db);
 
     const app = require('./src/app')(db);
-      
+    const PORT = process.env.PORT || 8010;
+    
     app.use('/', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
-      
-    app.listen(port, () => logger.info(`App started and listening on port ${port}`));
+
+    app.listen(PORT, () => logger.info(`App started and listening on port ${PORT}`));
 });
