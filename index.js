@@ -1,6 +1,7 @@
 'use strict';
 
-const port = 8010;
+const dotenv = require('dotenv');
+dotenv.config();
 
 const swaggerUI = require('swagger-ui-express');
 const YAML =  require('yamljs');
@@ -15,6 +16,8 @@ const buildSchemas = require('./src/schemas');
 
 db.serialize( async() => {
     await buildSchemas(db);
+
+    const port = process.env.PORT;
 
     const app = require('./src/app')(db);
       
